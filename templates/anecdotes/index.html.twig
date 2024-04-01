@@ -1,0 +1,29 @@
+{% extends 'layouts/base.html.twig' %}
+{% block title %}Anecdotes{% endblock %}
+{% block body %}
+    {% if anecdotes|length >0 %}
+        <div class="h-100 m-4 center py-5 px-xs-5 px-2 overflow-hidden rounded-3 text-center" style="background-color: #e10414!important;color:#fff!important;">
+            {#  <div class="h-100 m-4 center p-5 text-bg-dark rounded-3 text-center" style="background-color: #6599cd!important;">#}
+            <h1 class="display-1" style="font-family: 'Mexcellent 3D', 'Fredoka One', cursive;">
+                <span class="num-counterUp">{{ anecdotes|length }}</span> {{ pluralize(anecdotes|length, 'Anecdote') }}
+            </h1>
+            <p>et statistiques les plus juteuses de ta région</p>
+        </div>
+        <div class="container-xl">
+            <ul class="list-group list-group-flush text-bg-dark">
+                {% for anecdote in anecdotes %}
+                    <li class="list-group-item text-bg-dark border-secondary">
+                        <p class="pl-2 mb-0">
+                        <span class="mr-1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
+                          <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z"/>
+                        </svg></span>
+                        {{ anecdote.body }}
+                        </p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="h1 mt-5 text-center">Pas d'anecdote sorry bro</p>
+    {% endif %}
+{% endblock %}

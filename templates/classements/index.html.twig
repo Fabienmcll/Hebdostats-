@@ -1,0 +1,47 @@
+{% extends 'layouts/base.html.twig' %}
+{% block title %}Classements{% endblock %}
+{% block body %}
+    {% if classement|length >0 %}
+        <div class="h-100 m-4 center py-4 px-xs-5 px-2 overflow-hidden rounded-3 text-center" style="background-color: #ffeb25!important;color:#e10414!important;">
+            {#  <div class="h-100 m-4 center p-5 text-bg-dark rounded-3 text-center" style="background-color: #6599cd!important;">#}
+            <h1 class="display-1" style="font-family: 'Mexcellent 3D', 'Fredoka One', cursive;">
+                {{ saison.nom }}
+            </h1>
+            <p>
+                Du {{ saison.debut|date('d/m/Y') }} au {{ saison.fin|date('d/m/Y') }}<br>
+                1 point par inscription + 1 point par tour de loser passé
+            </p>
+        </div>
+        <div class="container-xl">
+            <ul class="list-group list-group-flush text-bg-dark">
+                {% set i=1 %}
+                {% set currentNbPoints = 0 %}
+                {% for id,smasheur in classement|sort((a, b) => b.nbPoints <=> a.nbPoints) %}
+                    {% set position=i %}
+                    <li class="list-group-item text-bg-dark border-secondary">
+                        <a class="link-light text-decoration-none" href="{{ path('app_smasheurs_show',{id:id}) }}">
+                            <h4 class="pl-2 mb-0 text-center">
+                            {#{{dump(smasheur)}}#}
+                            <span>{{position}}.</span>
+                            {{ smasheur.prefix? smasheur.prefix ~ ' | '}} {{smasheur.pseudo}}
+                            {% if smasheur.picture is defined and smasheur.picture is not null %}
+                                <img style="height:28px" class="rounded-5 img-thumbnail bg-dark"
+                                src="{{ asset('build/images/placeholder.png') }}"
+                                {{ stimulus_controller('symfony/ux-lazy-image/lazy-image', {
+                                    src: smasheur.picture
+                                }) }}
+                                {# Optional but avoids having a page jump when the image is loaded #}
+                                height="28"
+                            >
+                            {% endif %}
+                             : {{smasheur.nbPoints}} {{ pluralize(smasheur.nbPoints, 'point') }}
+                            </h4></a>
+                    </li>
+                    {% set i=i+1 %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="h1 mt-5 text-center">Pas de classement sorry bro</p>
+    {% endif %}
+{% endblock %}

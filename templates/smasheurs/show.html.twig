@@ -1,0 +1,110 @@
+{% extends 'layouts/base.html.twig' %}
+{% block title %}Saucismasheur{% endblock %}
+{% block body %}
+    <div class="text-center">
+        {% if smasheur.user.genderPronoun is defined and smasheur.user.genderPronoun!=null %}
+            <small class="small">{{  smasheur.user.genderPronoun }}</small>
+        {% endif %}
+        <h1 class="display-3">
+            <span>
+                {% if smasheur.user.images.0 is defined and smasheur.user.images.0 is not null %}
+                    <img src="{{ smasheur.user.images.0.url }}"  style="width:2em" class="rounded-5 img-thumbnail bg-dark 
+                        alt="Photo de profil {{ smasheur.gamerTag }}">
+                {% endif %}
+                {{ smasheur.prefix? smasheur.prefix ~ ' | '}}{{ smasheur.gamerTag }}
+            </span>
+            {% if tabInfo.persos|length > 1 %}
+                <br>
+            {% endif %}
+            <span>
+                {% set MainChar = true %}
+                {% for idperso,nbUse in tabInfo.persos %}
+                    <img src="{{ attribute(tabInfo.imgURL,idperso) }}" style="width:
+                    {% if MainChar %}1{% else %}0.75{% endif %}em" alt="Personnage utilisé">
+                    {% set MainChar = false %}
+                {% endfor %}
+            </span>
+        </h1>
+        {% if tabInfo.titres|length > 0 %}
+            <div>
+                {#<h4>{{ dump(tabInfo.titres) }}</h4>#}
+                {% for titre,desc in tabInfo.titres %}
+                    <a class="btn btn-outline-light my-1 text-white " data-toggle="tooltip" data-placement="top" data-bs-trigger="hover focus manual" title="{{ desc }}">{{ titre }}</a>
+                {% endfor %}
+                <br>
+            </div>
+        {% endif %}
+        {% if tabInfo.nbParticipations > 0 %}
+            <small>Stats à partir de la Hebdoma’DEH #20 (28/08/2019) :</small>
+            <ul class="list-group text-bg-dark center mb-4 mx-auto" style="max-width : 500px">
+                <li class="list-group-item text-bg-dark border-secondary d-inline-flex">
+                    <span class="flex-fill text-start">Cash Prize total</span><span class="flex-fill text-end">
+                        {% if tabInfo.CashPrize is empty %}
+                            Que dalle
+                        {% else %}
+                            {{ tabInfo.CashPrize|join(', ', ' et ') }}
+                        {% endif %}
+                    </span>
+                </li>
+                <li class="list-group-item text-bg-dark border-secondary d-inline-flex">
+                    <span class="flex-fill text-start">Participations</span><span class="flex-fill text-end num-counterUp">{{ tabInfo.nbParticipations }}</span>
+                </li>
+                <li class="list-group-item text-bg-dark border-secondary d-inline-flex">
+                    <span class="flex-fill text-start">Top 1</span><span class="flex-fill text-end num-counterUp">{{ tabInfo.nbTop1 }}</span>
+                </li>
+                <li class="list-group-item text-bg-dark border-secondary d-inline-flex">
+                    <span class="flex-fill text-start">Défaites déchirantes en Grande Finale</span><span class="flex-fill text-end num-counterUp">{{ tabInfo.nbGFPerdues }}</span>
+                </li>
+                <li class="list-group-item text-bg-dark border-secondary d-inline-flex">
+                    <span class="flex-fill text-start">Top 3</span><span class="flex-fill text-end num-counterUp">{{ tabInfo.nbTop3 }}</span>
+                </li>
+                <li class="list-group-item text-bg-dark border-secondary d-inline-flex">
+                    <span class="flex-fill text-start">Top 8</span><span class="flex-fill text-end num-counterUp">{{ tabInfo.nbTop8 }}</span>
+                </li>
+                <li class="list-group-item text-bg-dark border-secondary d-inline-flex">
+                    <span class="flex-fill text-start">9ème place comme un·e bouffon·ne</span><span class="flex-fill text-end num-counterUp">{{ tabInfo.nb9emePlace }}</span>
+                </li>
+                <li class="list-group-item text-bg-dark border-secondary d-inline-flex">
+                    <span class="flex-fill text-start">Top 16</span><span class="flex-fill text-end num-counterUp">{{ tabInfo.nbTop16 }}</span>
+                </li>
+                <li class="list-group-item text-bg-dark border-secondary d-inline-flex">
+                    <span class="flex-fill text-start">Top 32</span><span class="flex-fill text-end num-counterUp">{{ tabInfo.nbTop32 }}</span>
+                </li>
+                <li class="list-group-item text-bg-dark border-secondary d-inline-flex">
+                    <span class="flex-fill text-start">Pire</span><span class="flex-fill text-end num-counterUp">{{ tabInfo.nbWorst }}</span>
+                </li>
+            {% for IdCompteSecondaire,IdComptePrincipal in tabAccounts %}
+                {% if smasheur.id == IdCompteSecondaire %}
+                    <p>Un petit lien vers ton compte <a href="{{ path('app_smasheurs_show',{id:IdComptePrincipal}) }}">principal</a></p>
+            {#  {% elseif smasheur.id == IdComptePrincipal %}
+                    <p>T'as un compte secondaire petit <a href="{{ path('app_smasheurs_show',{id:IdCompteSecondaire}) }}">coquin</a></p>
+            #}{% endif %}
+            {% endfor %}
+            {% if smasheur.id in tabAccounts %}
+                {#<p>Tkt Bilel j'ai compté tes comptes secondaires pour le hall of Fame</p>#}
+                <p>Les stats de cette fiche ne comptabilisent pas les comptes secondaires.</p>
+            {% endif %}
+            </ul>
+            {{ render_chart(chart) }}
+            
+            <div class="center text-white mb-4 mx-auto" style="max-width : 500px">{{ render_chart(top8chart) }}</div>
+        {% else %}
+            <h5 class="mb-5 m-3 text-white ">Aucune participation depuis le Hebdoma’DEH
+ #20 (28/08/2019)</h5>
+        {% endif %}
+        
+        <span class="mt-5">
+            {% if tabInfo.TWITTER is defined %}
+                <a class="mx-3" target="_blank" href="{{ tabInfo.TWITTER }}"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-twitter" viewBox="0 0 16 16">
+                        <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"/>
+                    </svg></a>
+            {% endif %}
+            {% if tabInfo.TWITCH is defined %}
+                <a style="color:rebeccapurple" target="_blank" href="{{ tabInfo.TWITCH }}"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-twitch" viewBox="0 0 16 16">
+                        <path d="M3.857 0 1 2.857v10.286h3.429V16l2.857-2.857H9.57L14.714 8V0H3.857zm9.714 7.429-2.285 2.285H9l-2 2v-2H4.429V1.143h9.142v6.286z"/>
+                        <path d="M11.857 3.143h-1.143V6.57h1.143V3.143zm-3.143 0H7.571V6.57h1.143V3.143z"/>
+                    </svg></a>
+            {% endif %}
+        </span>
+    </div>
+{% endblock %}

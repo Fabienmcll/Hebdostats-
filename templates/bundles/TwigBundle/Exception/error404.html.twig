@@ -1,0 +1,14 @@
+{% extends 'layouts/base.html.twig' %}
+{% block title %}Erreur 404{% endblock %}
+{% block body %}
+    <div class="text-center">
+    <h1>&#x1F976; Erreur 404 &#x1F976;</h1>
+    <p> {% if message is defined %}
+            {{ message }}
+        {% else %}
+            La page demandée n'existe pas
+        {% endif %}
+    </p>
+    <small>Oupsy doopsy</small>
+    </div>
+{% endblock %}

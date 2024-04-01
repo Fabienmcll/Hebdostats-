@@ -1,0 +1,63 @@
+@import "shared/variables";
+@import "~bootstrap/scss/bootstrap";
+
+$primary: darken(#428bca, 20%);
+@font-face {
+	font-family: 'Mexcellent 3D';
+	src: url("/public/fonts/mexcellent3d.ttf") format("truetype")
+}
+@font-face {
+	font-family: 'Mexcellent-Regular';
+	src: url('/public/fonts/mexcellentrg.ttf') format('truetype')
+}
+
+@font-face {
+	font-family: 'Mexcellent-Regular';
+	src: url('/public/fonts/mexcellentrg.ttf') format('truetype')
+}
+
+@font-face {
+	font-family: 'BebasNeue';
+	src: url('/public/fonts/BebasNeue.ttf') format('truetype')
+}
+
+
+body{
+    font-family: $primary-font, sans-serif;
+}
+.alert{
+    padding: 10px;
+    color: white;
+    text-align: center;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+
+    &.alert-success{
+        background-color: green;
+    }
+    &.alert-error{
+        background-color: red;
+    }
+    &.alert-info{
+        background-color: blue;
+    }
+
+}
+.vich-image {
+    .form-check {
+        @extend .mt-3
+    }
+    img{
+        @extend .mb-2, .rounded, .shadow, .img-thumbnail;
+    }
+}
+.pin{
+    img{
+        transition: transform 0.3s ease-out;
+        &:hover {
+            transform: scale(1.075);
+        }
+    }
+}
+

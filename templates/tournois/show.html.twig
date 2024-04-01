@@ -1,0 +1,67 @@
+{% extends 'layouts/base.html.twig' %}
+{% block title %}Saucismash{% endblock %}
+{% block body %}
+    {% if tournament is defined %}
+        <div class="text-center">
+            {% set singlesEvent = tournament.events.0 %}
+            {% if tournament.events|length>1 %}
+                {% for event in  tournament.events %}
+                    {% if event.numEntrants > singlesEvent.numEntrants %}
+                        {% set singlesEvent = event %}
+                    {% endif %}  
+                {% endfor %}
+            {% endif %}
+            
+            <h1 class="display-4">{{ tournament.name }}</h1>
+            <small>{{ tournament.startAt|date('d/m/Y') }} &middot; {{ singlesEvent.numEntrants }} participants</small>
+            <p>
+            {% if singlesEvent.standings.nodes|length > 0 %}
+                {% set winner = singlesEvent.standings.nodes.0.player %}
+            {% endif %}
+            </p>
+            {#<div class="hors-top-8">#}
+            {% for standing in singlesEvent.standings.nodes %}
+                <h3 
+                    {% if standing.placement>= 8 %}
+                        class="hors-top-8" 
+                    {% endif %}
+                    style="min-height: 50px">
+                    <a class="link-light text-decoration-none" href="{{ path('app_smasheurs_show',{id:standing.player.id}) }}">
+                    {% if standing.placement<= 7 %}
+                        <i class="bi bi-{{ standing.placement }}-square"></i>
+                    {% else %}
+                        <span>{{ standing.placement }}.</span>
+                    {% endif %}
+                    
+                        {{ standing.player.prefix? standing.player.prefix ~ ' | '}}{{ standing.player.gamerTag }}</a>
+                    {% if standing.persos is defined %}
+                        {% for perso in standing.persos.ImgURL %}
+                            <img src="{{ perso.1.url }}" style="width: 1.5em" alt="Personnage">
+                        {% endfor %}
+                    {% endif %}
+                </h3>
+            {% endfor %}
+            {#</div>#}
+            <a id="display-all" class="btn btn-outline-light mt-3">Afficher tout</a>
+            <a id="lien_bracket" class="btn btn-outline-light mt-3" target="_blank" href="https://start.gg/{{ tournament.slug }}">Lien du bracket</a>
+        </div>
+    {% elseif tournoi is defined %}
+     <div class="text-center">
+         <h1 class="display-1">Saucismash #{{ tournoi.numSaucisse }}</h1>
+         <h2 class="display-3">Vainqueur : {{ tournoi.smasheur.tag? tournoi.smasheur.tag ~ ' | '}}{{ tournoi.smasheur.pseudo }}</h2>
+         <span>
+             {% for nom,url in images %}
+                 <img src="{{ url }}" alt="{{ nom }}" height="100">
+             {% endfor %}
+         </span>
+         <p>J'ai pas plus d'infos pour le moment
+             {% if tournoi.numSaucisse > 1 %}
+             mais voici un lien : </p><a class="btn btn-outline-light mt-3" target="_blank" href="https://challonge.com/fr/saucismashultimate{{ tournoi.numSaucisse }}">Lien du bracket</a>
+             {% else %}
+                 désolé.</p>
+             {% endif %}
+     </div>
+    {% else %}
+        <h1>Ce tournoi n'existe pas (pas bravo!)</h1>
+    {% endif %}
+{% endblock %}

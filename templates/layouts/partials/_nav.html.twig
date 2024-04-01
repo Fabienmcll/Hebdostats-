@@ -1,0 +1,19 @@
+
+
+<nav class="navbar navbar-expand-sm justify-content-start navbar-dark mb-4 border-bottom" style="border-color: black!important; background: #202020;">
+    <div class="container">
+        <a class="navbar-brand" href="{{ path('app_home') }}" style="font-family: 'BebasNeue', cursive; color: white;">
+            <img src="{{ asset('build/images/logo deh.png') }}" alt="Hebdostats" height="50" style="margin-right: 10px;"> <!-- Ajoutez un style de marge à droite -->
+            Hebdostats
+        </a>
+
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link link-light" href="{{ path('classements') }}"><i class="bi bi-list-ol"></i> Classements</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link link-light" href="{{ path('anecdotes') }}"><i class="bi bi-body-text"></i> Anecdotes</a>
+            </li>
+        </ul>
+    </div>
+</nav>
