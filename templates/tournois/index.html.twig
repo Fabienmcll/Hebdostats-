@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html.twig' %}
 
-{% block title %}Les teneurs de Hebdoma’DEH{% endblock %}
+{% block title %}Hebdo’Stats{% endblock %}
 
 {% block body %}
     {#<h1 class="text-center">Récuperation des données</h1>#}
@@ -9,12 +9,10 @@
         <span class="visually-hidden">Loading...</span>
     </div>
     </div>#}
- 
-  
 
     {% set NbSaucisses = tournois|length + data.tournaments.nodes|length %}
     {% if NbSaucisses >0 %}
-       <div class="h-100 m-4 center py-5 px-xs-5 px-2 overflow-hidden rounded-3 text-center" style="background-color: #e10414!important;color:#fff!important;">
+       <div class="h-100 m-4 center py-5 px-xs-5 px-2 overflow-hidden rounded-3 text-center" style="background: linear-gradient(to right, #FF0000, #800023); color:#fff!important;">
     <h1 class="display-1" style="font-family: 'BebasNeue', 'Fredoka One', cursive;">
         <span class="num-counterUp">{{ NbSaucisses }}</span> {{ NbSaucisses is same as(1) ? 'Hebdoma’DEH' : 'Hebdoma’DEH' }}
     </h1>
@@ -25,53 +23,49 @@
             <ol class="list-group list-group-flush text-bg-dark">
                 {% set i=1 %}
                 {% set currentNbSaucisses = 0 %}
-                {% for id,smasheur in tabInfo|sort((a, b) => b.listSaucisses|length <=> a.listSaucisses|length) %}
-                    {% if smasheur.listSaucisses|length != currentNbSaucisses %}
-                        {% set position=i %}
-                        {% set currentNbSaucisses = smasheur.listSaucisses|length %}
-                    {% endif %}
-                    <li class="list-group-item text-bg-dark border-secondary pb-0">
-                        <h4 style="min-height: 50px" class="pl-2 mb-0 text-center">
-                         {% if position==1 %}<span><i class="fa-solid fa-hotdog" style="color:gold"></i></span>
-                         {% elseif position==2 %}<span><i class="fa-solid fa-hotdog" style="color:silver"></i></span>
-                         {% elseif position==3 %}<span> <i class="fa-solid fa-hotdog" style="color:saddlebrown"></i></span>
-                         {% else %}<span>{{ position }}.</span>
-                         {% endif %}
-                        <a class="link-light text-decoration-none" href="{{ path('app_smasheurs_show',{id:id}) }}">
-                        {{ smasheur.prefix? smasheur.prefix ~ ' | '}}{{ smasheur.gamerTag }}
-                        {% if smasheur.picture is defined and smasheur.picture is not null %}
-                            {#<img src="{{ smasheur.picture }}"  style="height:40px" class="rounded-5 img-thumbnail bg-dark"
-                                 alt="Photo de profil {{ smasheur.gamerTag }}">#}
-                            <img style="height:40px" class="rounded-5 img-thumbnail bg-dark"
-                                src="{{ asset('build/images/placeholder.png') }}"
-                                {{ stimulus_controller('symfony/ux-lazy-image/lazy-image', {
-                                    src: smasheur.picture
-                                }) }}
-                                {# Optional but avoids having a page jump when the image is loaded #}
-                                height="40"
-                            >
-                        {% endif %}</a>
-                            :{{ smasheur.listSaucisses|length }} {{ 'Hebdoma’DEH' }}
+                {% for id, smasheur in tabInfo|sort((a, b) => b.listSaucisses|length <=> a.listSaucisses|length) %}
+    {% if smasheur.listSaucisses|length != currentNbSaucisses %}
+        {% set position = i %}
+        {% set currentNbSaucisses = smasheur.listSaucisses|length %}
+    {% endif %}
+    <li class="list-group-item text-bg-dark border-secondary pb-0">
+        <h4 style="min-height: 50px" class="pl-2 mb-0 text-center">
+            {% if position == 1 %}<span><i class="fa-solid fa-hotdog" style="color:gold"></i></span>
+            {% elseif position == 2 %}<span><i class="fa-solid fa-hotdog" style="color:silver"></i></span>
+            {% elseif position == 3 %}<span> <i class="fa-solid fa-hotdog" style="color:saddlebrown"></i></span>
+            {% else %}<span>{{ position }}.</span>
+            {% endif %}
+            {{ smasheur.prefix ? smasheur.prefix ~ ' | ' }}{{ smasheur.gamerTag }}
+            {% if smasheur.picture is defined and smasheur.picture is not null %}
+                <img style="height:40px" class="rounded-5 img-thumbnail bg-dark"
+                    src="{{ asset('build/images/placeholder.png') }}"
+                    {{ stimulus_controller('symfony/ux-lazy-image/lazy-image', {
+                        src: smasheur.picture
+                    }) }}
+                    height="40"
+                >
+            {% endif %}
+            :{{ smasheur.listSaucisses|length }} {{ 'Hebdoma’DEH' }}
+        </h4>
+        <p class="text-center mt-2">
+        {% for saucisse in smasheur.listSaucisses|reverse %}
+            <a class="btn btn-outline-light mb-2"
+                {% if saucisse.id > 19 %}
+                    href="{{ path('app_tournois_show', {id:saucisse.id}) }}"
+                {% else %}
+                    href="{{ path('app_tournois_show_non_api', {id:saucisse.id}) }}"
+                {% endif %}>
+                {{ saucisse.numSaucisse is defined ? saucisse.numSaucisse }}
+                {% if saucisse.date is defined and date(saucisse.date) > date('-7 days') %}
+                    <small style='color:red;font-size: x-small;vertical-align: top;'>New</small>
+                {% endif %}
+            </a>
+        {% endfor %}
+        </p>
+    </li>
+    {% set i = i + 1 %}
+{% endfor %}
 
-                        </h4>
-                        <p class="text-center mt-2">
-                        {% for saucisse in smasheur.listSaucisses|reverse %}
-                            <a class="btn btn-outline-light mb-2"
-                               {% if saucisse.id > 19 %}
-                                    href="{{ path('app_tournois_show',{id:saucisse.id}) }}"
-                               {% else %}
-                                   href="{{ path('app_tournois_show_non_api',{id:saucisse.id}) }}"
-                               {% endif %}>
-                                {{ saucisse.numSaucisse is defined ?saucisse.numSaucisse }}
-                                {% if saucisse.date is defined and date(saucisse.date) > date('-7 days') %}
-                                    <small style='color:red;font-size: x-small;vertical-align: top;'>New</small>
-                                {% endif %}
-                            </a>
-                        {% endfor %}
-                        </p>
-                    </li>
-                    {% set i=i+1 %}
-                {% endfor %}
             </ol>
         </div>
     {% else %}

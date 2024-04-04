@@ -1,8 +1,8 @@
 {% extends 'layouts/base.html.twig' %}
-{% block title %}Saucismash{% endblock %}
+{% block title %}Hebdoma’DEH{% endblock %}
 {% block body %}
     {% if tournament is defined %}
-        <div class="text-center">
+        <div class="text-center" style="color: white;"> 
             {% set singlesEvent = tournament.events.0 %}
             {% if tournament.events|length>1 %}
                 {% for event in  tournament.events %}
@@ -13,7 +13,7 @@
             {% endif %}
             
             <h1 class="display-4">{{ tournament.name }}</h1>
-            <small>{{ tournament.startAt|date('d/m/Y') }} &middot; {{ singlesEvent.numEntrants }} participants</small>
+            <small style="color: white;">{{ tournament.startAt|date('d/m/Y') }} &middot; {{ singlesEvent.numEntrants }} participants</small>
             <p>
             {% if singlesEvent.standings.nodes|length > 0 %}
                 {% set winner = singlesEvent.standings.nodes.0.player %}
@@ -47,7 +47,7 @@
         </div>
     {% elseif tournoi is defined %}
      <div class="text-center">
-         <h1 class="display-1">Saucismash #{{ tournoi.numSaucisse }}</h1>
+         <h1 class="display-1">Hebdoma’DEH #{{ tournoi.numhebdomadeh }}</h1>
          <h2 class="display-3">Vainqueur : {{ tournoi.smasheur.tag? tournoi.smasheur.tag ~ ' | '}}{{ tournoi.smasheur.pseudo }}</h2>
          <span>
              {% for nom,url in images %}
@@ -55,7 +55,7 @@
              {% endfor %}
          </span>
          <p>J'ai pas plus d'infos pour le moment
-             {% if tournoi.numSaucisse > 1 %}
+             {% if tournoi.numhebdomadeh > 1 %}
              mais voici un lien : </p><a class="btn btn-outline-light mt-3" target="_blank" href="https://challonge.com/fr/saucismashultimate{{ tournoi.numSaucisse }}">Lien du bracket</a>
              {% else %}
                  désolé.</p>

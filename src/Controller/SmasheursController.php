@@ -184,7 +184,7 @@ class SmasheursController extends AbstractController
         //dump($smasheur);
         if(!is_null($smasheur)){
             $nbSaucissesChallonge = $smasheur->getTournois()->count();
-            $titresChallonge = ['Glorieux·se Ancien‧ne' => 'Tu as remporté une Saucismash à l\'époque de Challonge !'];
+            $titresChallonge = ['Glorieux·se Ancien‧ne' => 'Tu as remporté une Hebdomadeh à l\'époque de Challonge !'];
         } else{
             $nbSaucissesChallonge = 0;
             $titresChallonge = [];
